@@ -86,3 +86,50 @@ function displayRickMortyData(rmArray) {
 document
   .getElementById("btn-load-rm")
   .addEventListener("click", fetchRickMortyData);
+
+
+
+  // Event listener on the parent container
+document.getElementById("button-container").addEventListener("click", function(e) {
+    if (e.target.id === "btn-countries") {
+        fetchCountriesData();
+    } else if (e.target.id === "btn-users") {
+        fetchUsersData();   
+    }
+}); 
+
+async function fetchUsersData() {
+    try {
+        const response = await fetch("https://jsonplaceholder.typicode.com/users");
+        if (!response.ok) {
+            console.log(`Network response was not ok - Status: ${response.status}`);
+            return;
+        }
+        const data = await response.json();
+        console.log(data);
+        // Verify the code is working by logging the data to the console
+        console.log(data);
+        // Call the display function
+        displayCountriesData(data);
+    } catch (error) {
+        const container = document.getElementById("remote-data-container");
+        container.innerHTML = '<p class="error">⚠️ Failed to load data. Please try again later.</p>';   
+        console.error(`Error fetching data: ${error}`);
+    }
+}
+
+function displayUsersData(usersArray) {
+    const container = document.getElementById("remote-data-container");
+    let htmlOutput = "";
+    usersArray.forEach(user => {
+        htmlOutput += `
+            <p>
+            <b>${user.name} ${user.username}</b><br>
+            Email: <a href="mailto:${user.email}">${user.email}</a><br>
+            Website: <a href="http://${user.website}" target="_blank">${user.website}</a><br>
+            Location: ${user.address.street}, ${user.address.city}
+            </p>
+        `;
+    });
+    container.innerHTML = htmlOutput;
+} 
